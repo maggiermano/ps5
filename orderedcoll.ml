@@ -129,7 +129,13 @@ module BinSTree (Elt : COMPARABLE)
     Hint: Use `Elt.compare`. See `delete` for inspiration.
     ..................................................................*)  
     let rec insert (x : elt) (t : tree) : tree =
-      failwith "insert not implemented"
+       match t with
+       | Leaf -> Branch (Leaf, [x], Leaf)
+       | Branch (left_side, list, right_side) -> 
+         let comparing = C.compare (List.hd list) x 
+         in if comparing = Less then Branch (left_side, list, insert x right_side) 
+            else if comparing = Greater then Branch (insert x left_side, list, right_side)
+            else Branch (left_side, x :: list, right_side)
 
     (*..................................................................
     search x t -- Returns `true` if the element `x` is in tree `t`,
@@ -138,7 +144,11 @@ module BinSTree (Elt : COMPARABLE)
     tree.
     ..................................................................*)
     let rec search (x : elt) (t : tree) : bool =
-      failwith "search not implemented"
+      match t with 
+      | Leaf -> false
+      | Branch (left_side, list, right_side) -> 
+        if List.mem x list then true
+        else search x left_side || search x right_side
 
     (* pull_min t -- A useful function for removing the node (list of
        elements) with the minimum value from a binary tree, returning
@@ -176,7 +186,7 @@ module BinSTree (Elt : COMPARABLE)
          (* Reverse the elements stored at this node so that we pop
             off the last element in the list *)
          match List.rev this with
-         | [] -> failwith "delete: empty list as node"
+         | [] -> delete 
          | hd :: tl ->
             match Elt.compare x hd with
             | Less -> Branch (delete x left, this, right)
@@ -204,7 +214,8 @@ module BinSTree (Elt : COMPARABLE)
     comparison function (like `Order.IntStringCompare`).
     ..................................................................*)
     let getmin (t : tree) : elt =
-      failwith "getmin not implemented"
+      match pull_min t with
+       | list, _ -> List.hd (List.rev list)
 
     (*..................................................................
     getmax t -- Returns the maximum value of the tree `t`. Similarly
@@ -214,7 +225,9 @@ module BinSTree (Elt : COMPARABLE)
     in handy.
     ..................................................................*)  
     let rec getmax (t : tree) : elt =
-      failwith "getmax not implemented"
+      match pull_min t with
+       | list, Leaf -> List.hd (List.rev lst)
+       | _, rest_of_tree -> getmax rest_of_tree
 
     (* to_string t -- Generates a string representation of a binary
        search tree `t`, useful for testing! *)
@@ -343,7 +356,7 @@ each of you (on average) spent on the problem set, not in total.)
 ......................................................................*)
 
 let minutes_spent_on_pset () : int =
-  failwith "time estimate not provided" ;;
+  360 ;;
 
 (*......................................................................
 It's worth reflecting on the work you did on this problem set. Where
@@ -355,4 +368,7 @@ below.
 ......................................................................*)
 
 let reflection () : string =
-  "...your reflections here..." ;;
+  "It was complicated at first but I read through the writeup and the other files
+  thoroughly to get a really good understanding and it made more sense the second time.
+  It still took long because I couldn;t manage to organize a partner in time. I didn't
+  understand the testing at first but office hours helped with that immensely. " ;;
