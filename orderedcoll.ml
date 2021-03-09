@@ -226,7 +226,7 @@ module BinSTree (Elt : COMPARABLE)
     ..................................................................*)  
     let rec getmax (t : tree) : elt =
       match pull_min t with
-       | list, Leaf -> List.hd (List.rev lst)
+       | list, Leaf -> List.hd (List.rev list)
        | _, rest_of_tree -> getmax rest_of_tree
 
     (* to_string t -- Generates a string representation of a binary
