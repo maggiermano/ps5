@@ -4,7 +4,9 @@
                            Note on Testing
  *)
 
-open Orderedcoll ;;
+open Orderedcoll;;
+open Prioqueue;;
+open Order;;
 
 (* Testing dilemma: I've implemented the `BinSTree` functor (in the
 `Orderedcoll` module opened above). How can I make sure that the
@@ -80,6 +82,16 @@ exposed to clients of `IntTree` and other modules that satisfy the
 following invocation:*)
 
 let _ = IntTree.run_tests () ;;
+
+module IntListQueue = (ListQueue(IntCompare) :
+                         PRIOQUEUE with type elt = IntCompare.t)
+
+module IntHeapQueue = (BinaryHeap(IntCompare) :
+                         PRIOQUEUE with type elt = IntCompare.t)
+
+module IntTreeQueue = (TreeQueue(IntCompare) :
+                        PRIOQUEUE with type elt = IntCompare.t)
+
 let _ = IntListQueue.run_tests () ;;
 let _ = IntTreeQueue.run_tests () ;;
 let _ = IntHeapQueue.run_tests () ;;
