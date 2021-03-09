@@ -86,7 +86,7 @@ module ListQueue (Elt : COMPARABLE)
     let add (e : elt) (q : queue) : queue =
       match q with 
       | [] -> [e]
-      | head :: tail -> let comparing = C.compare e head 
+      | head :: tail -> let comparing = Elt.compare e head 
                         in if comparing Less then e :: q 
                            else head :: (add e tail)
 
