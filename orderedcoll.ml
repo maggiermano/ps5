@@ -186,7 +186,7 @@ module BinSTree (Elt : COMPARABLE)
          (* Reverse the elements stored at this node so that we pop
             off the last element in the list *)
          match List.rev this with
-         | [] -> delete 
+         | [] -> failwith "delete: empty list as node" 
          | hd :: tl ->
             match Elt.compare x hd with
             | Less -> Branch (delete x left, this, right)
