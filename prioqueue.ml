@@ -86,8 +86,7 @@ module ListQueue (Elt : COMPARABLE)
     let add (e : elt) (q : queue) : queue =
       match q with 
       | [] -> [e]
-      | head :: tail -> let comparing = Elt.compare e head 
-                        in if comparing Less then e :: q 
+      | head :: tail -> if Elt.compare e head = Less then e :: q 
                            else head :: (add e tail)
 
     let take (q : queue) : elt * queue =
@@ -97,43 +96,43 @@ module ListQueue (Elt : COMPARABLE)
 
     let test_empty () =
       assert (empty = []);
-      assert (empty <> [C.generate ()])
+      assert (empty <> [Elt.generate ()])
 
     let test_is_empty () =
       assert(is_empty empty);
-      assert (not (is_empty [C.generate ()]))
+      assert (not (is_empty [Elt.generate ()]))
 
-    let test_add_take_single () =
+    let test_add_one () =
       let q = empty in
-      let x = C.generate () in
+      let x = Elt.generate () in
       let f = add x q in
       assert (f = [x]);
       assert (take f = (x, []))
 
-    let test_add_take_ordered_large () =
-      let x = C.generate () in
-      let x2 = C.generate_gt x in
-      let x3 = C.generate_gt x2 in
-      let x4 = C.generate_gt x3 in
+    let test_add_two () =
+      let x = Elt.generate () in
+      let x2 = Elt.generate_gt x in
+      let x3 = Elt.generate_gt x2 in
+      let x4 = Elt.generate_gt x3 in
       let q = (add x4 (add x3 (add x2 (add x empty)))) in
       assert (q = [x; x2; x3; x4]);
       assert (take q = (x4, [x; x2; x3]))
 
     let test_add_take_ordered_small () =
-      let x = C.generate () in
-      let x2 = C.generate_lt x in
-      let x3 = C.generate_lt x2 in
-      let x4 = C.generate_lt x3 in
+      let x = Elt.generate () in
+      let x2 = Elt.generate_lt x in
+      let x3 = Elt.generate_lt x2 in
+      let x4 = Elt.generate_lt x3 in
       let q = (add x4 (add x3 (add x2 (add x empty)))) in
       assert (q = [x4; x3; x2; x]);
       assert (take q = (x, [x4; x3; x2]))
 
     let test_add_take_unordered () =
-      let x = C.generate () in
-      let x1 = C.generate_lt x in
-      let x4 = C.generate_lt x1 in
-      let x2 = C.generate_gt x in
-      let x3 = C.generate_gt x2 in
+      let x = Elt.generate () in
+      let x1 = Elt.generate_lt x in
+      let x4 = Elt.generate_lt x1 in
+      let x2 = Elt.generate_gt x in
+      let x3 = Elt.generate_gt x2 in
       let q = add x3 (add x1 (add x2 (add x4 (add x empty)))) in
       assert (q = [x4; x1; x; x2; x3]);
       assert (take q = (x3, [x4; x1; x; x2]))
@@ -209,21 +208,21 @@ module TreeQueue (Elt : COMPARABLE) : (PRIOQUEUE with type elt = Elt.t) =
       assert (not (is_empty (T.insert (C.generate ()) T.empty)))
 
     let test_add () =
-      let a = C.generate () in
+      let a = Elt.generate () in
       let t = add a empty in
       assert (t = (T.insert a T.empty));
       let t = add a t in
       assert (t = (T.insert a (T.insert a T.empty)));
-      let y = C.generate () in
+      let y = Elt.generate () in
       let t = add y t in
       assert (t = (T.insert y (T.insert a (T.insert a T.empty))))
 
     let test_take () =
-      let a = C.generate () in
-      let y = C.generate_lt a in
+      let a = Elt.generate () in
+      let y = Elt.generate_lt a in
       let t = add y (add a (add a empty)) in
       assert (take t = (y, add a (add a empty)));
-      let z = C.generate_lt y in
+      let z = Elt.generate_lt y in
       let t = add z (add z t) in
       assert (take t = (z, add z (add y (add a (add a empty)))))
 
@@ -402,12 +401,12 @@ module BinaryHeap (Elt : COMPARABLE) : (PRIOQUEUE with type elt = Elt.t) =
       in match t with
          | Leaf _ -> t
          | OneBranch (value1, value2) -> 
-            if C.compare value1 value2 = Greater then OneBranch (value2, value1) 
+            if Elt.compare value1 value2 = Greater then OneBranch (value2, value1) 
             else t
          | TwoBranch (x, value, left_side, right_side) ->
             let left_element, right_element = get_top left_side, get_top right_side 
-            in if C.compare value left_element <> Greater && C.compare value right_element <> Greater then t
-               else if C.compare left_element right_element = Greater then  
+            in if Elt.compare value left_element <> Greater && Elt.compare value right_element <> Greater then t
+               else if Elt.compare left_element right_element = Greater then  
                TwoBranch (x, right_element, left_side, fix (new_tree right_side value)) 
                else TwoBranch (x, left_element, fix (new_tree left_side value), right_side)
 
@@ -478,7 +477,97 @@ module BinaryHeap (Elt : COMPARABLE) : (PRIOQUEUE with type elt = Elt.t) =
          let (last, q1') = get_last t1 
          in e, Tree (fix (TwoBranch (Even, last, extract_tree q1', t2)))
 
-    let run_tests () = failwith "BinaryHeap run_tests not implemented"
+    let test_fix () = 
+      let x = Elt.generate () in
+      let x1 = Elt.generate_gt x in
+      let x2 = Elt.generate_lt x in
+      let x3 = Elt.generate_gt x in
+      let x4 = Elt.generate_gt x1 in
+      let t1 = OneBranch (x, x1) in
+      let t2 = OneBranch (x2, x3) in
+      let h = TwoBranch (Odd, x4, t1, t2) in
+      assert (is_fixed h = false) ;
+      assert (is_fixed (fix h) = true) ;
+      (* Multistep propagation with two branches *)
+      let y = Elt.generate () in
+      let y1 = Elt.generate_lt y in
+      let y2 = Elt.generate_lt y1 in
+      let y3 = Elt.generate_lt y2 in
+      let y4 = Elt.generate_lt y3 in
+      let y5 = Elt.generate_lt y4 in
+      let y6 = Elt.generate_lt y5 in
+      let y7 = Elt.generate_lt y6 in
+      let h1 = OneBranch (y5, y1) in
+      let h2 = TwoBranch (Odd, y7, h1, Leaf y4) in
+      let h3 = TwoBranch (Even, y6, Leaf y3, Leaf y2) in
+      let h = TwoBranch (Odd, y, h2, h3) in
+      assert (is_fixed (fix h) = true) ;
+      ()
+
+     let test_get_last () = 
+      let x = Elt.generate () in
+      let t = add x empty in
+      assert (get_last (extract_tree t) = (x, Empty));
+      let y = Elt.generate_gt x in 
+      let t = add y t in
+      assert (get_last (extract_tree t) = (y, Tree (Leaf x)));
+      let z = Elt.generate_gt x in 
+      let t = add z t in 
+      assert (get_last (extract_tree t) = (z, Tree (OneBranch(x,y)))) ;
+      let w = Elt.generate_gt y in
+      let t = add w t in
+      assert (get_last (extract_tree t) = (w, Tree (TwoBranch(Even, x, Leaf y, Leaf z)))) ;
+      let m = Elt.generate_gt y in
+      let t = add m t in
+      assert (get_last (extract_tree t) = (w, Tree (TwoBranch(Odd, x, OneBranch (y,w), Leaf z)))) ;
+      let n = Elt.generate_gt z in
+      let t = add m t in
+      assert (get_last (extract_tree t) = (n, Tree (TwoBranch(Even, x, OneBranch (y,w), OneBranch (z,m))))) ;
+      let k = Elt.generate_gt y in
+      let t = add m t in
+      assert (get_last (extract_tree t) = (k, Tree (TwoBranch(Odd, x, TwoBranch (Even,y,Leaf w, Leaf n), OneBranch (z,m))))) ;
+      ()
+
+
+     let test_take () = 
+      let y1 = Elt.generate () in
+      let y2 = Elt.generate_lt y1 in
+      let y3 = Elt.generate_lt y2 in
+      let y4 = Elt.generate_lt y3 in
+      let y5 = Elt.generate_lt y4 in
+      let y6 = Elt.generate_lt y5 in
+      let y7 = Elt.generate_lt y6 in
+      let y8 = Elt.generate_lt y7 in
+      let h1 = OneBranch (y5, y1) in
+      let h2 = TwoBranch (Odd, y7, h1, Leaf y4) in
+      let h3 = TwoBranch (Even, y6, Leaf y3, Leaf y2) in
+      let h = TwoBranch (Odd, y8, h2, h3) in
+      let element, q = take (Tree h) in
+      assert (ele = y8) ;
+      assert (is_fixed (extract_tree q)) ;
+      assert (is_even (extract_tree q)) ;
+      assert (size (extract_tree q) = 7) ;
+      let element, q1 = take q in
+      assert (ele = y7) ;
+      assert (is_fixed (extract_tree q1)) ;
+      assert (not (is_even (extract_tree q1))) ;
+      assert (size (extract_tree q1) = 6) ;
+      let element, q2 = take q1 in
+      assert (ele = y6) ;
+      assert (is_fixed (extract_tree q2)) ;
+      assert (is_even (extract_tree q2)) ;
+      assert (size (extract_tree q2) = 5) ;
+      let element, q3 = take q2 in
+      assert (ele = y5) ;
+      assert (is_fixed (extract_tree q3)) ;
+      assert (not (is_even (extract_tree q3))) ;
+      assert (size (extract_tree q3) = 4) ;
+      ()
+
+     let run_tests () = 
+      test_fix () ;
+      test_get_last () ;
+      test_take () ;;
   end
 
 (*......................................................................
