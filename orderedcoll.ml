@@ -132,10 +132,9 @@ module BinSTree (Elt : COMPARABLE)
        match t with
        | Leaf -> Branch (Leaf, [x], Leaf)
        | Branch (left_side, list, right_side) -> 
-         let comparing = Elt.compare (List.hd list) x 
-         in if comparing = Less then Branch (left_side, list, insert x right_side) 
-            else if comparing = Greater then Branch (insert x left_side, list, right_side)
-            else Branch (left_side, x :: list, right_side)
+         if Elt.compare (List.hd list) x = Less then Branch (left_side, list, insert x right_side) 
+         else if Elt.compare (List.hd list) x = Greater then Branch (insert x left_side, list, right_side)
+         else Branch (left_side, x :: list, right_side)
 
     (*..................................................................
     search x t -- Returns `true` if the element `x` is in tree `t`,
