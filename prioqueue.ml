@@ -118,7 +118,7 @@ module ListQueue (Elt : COMPARABLE)
       assert (q = [x; x2; x3; x4]);
       assert (take q = (x4, [x; x2; x3]))
 
-    let test_add_take_ordered_small () =
+    let test_add_and_take () =
       let x = Elt.generate () in
       let x2 = Elt.generate_lt x in
       let x3 = Elt.generate_lt x2 in
@@ -127,7 +127,7 @@ module ListQueue (Elt : COMPARABLE)
       assert (q = [x4; x3; x2; x]);
       assert (take q = (x, [x4; x3; x2]))
 
-    let test_add_take_unordered () =
+    let test_add_and_take_1 () =
       let x = Elt.generate () in
       let x1 = Elt.generate_lt x in
       let x4 = Elt.generate_lt x1 in
@@ -140,10 +140,10 @@ module ListQueue (Elt : COMPARABLE)
     let run_tests () =
       test_empty ();
       test_is_empty ();
-      test_add_take_single ();
-      test_add_take_ordered_large ();
-      test_add_take_ordered_small ();
-      test_add_take_unordered ();
+      test_add_one ();
+      test_add_two ();
+      test_add_and_take ();
+      test_add_and_take_1 ();
       ()
 
     (* IMPORTANT: Don't change the implementation of `to_string`. *)
