@@ -392,7 +392,7 @@ module BinaryHeap (Elt : COMPARABLE) : (PRIOQUEUE with type elt = Elt.t) =
     greater than its children, then it (recursively) fixes this
     tree too. Resulting tree satisfies the strong invariant.
     ..................................................................*)
-    let fix (t : tree) : tree =
+    let rec fix (t : tree) : tree =
       let new_tree old_tree element =
          match old_tree with
          | Leaf _ -> Leaf element
