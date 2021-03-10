@@ -478,19 +478,19 @@ module BinaryHeap (Elt : COMPARABLE) : (PRIOQUEUE with type elt = Elt.t) =
          in e, Tree (fix (TwoBranch (Even, last, extract_tree q1', t2)))
 
     let test_fix_one () =
-      let x = C.generate () in
+      let x = Elt.generate () in
       assert (Leaf x = Leaf x)
 
     let test_fix_two () =
-      let x = C.generate () in
-      let x2 = C.generate_gt x in
+      let x = Elt.generate () in
+      let x2 = Elt.generate_gt x in
       assert (fix (OneBranch (x, x2)) = OneBranch (x, x2));
       assert (fix (OneBranch (x2, x)) = OneBranch (x, x2))
 
     let test_fix_three () =
-      let x = C.generate () in
-      let nx = C.generate_lt x in
-      let x2 = C.generate_gt x in
+      let x = Elt.generate () in
+      let nx = Elt.generate_lt x in
+      let x2 = Elt.generate_gt x in
       assert (fix (TwoBranch (Even, x2, Leaf x, Leaf x)) =
               TwoBranch (Even, x, Leaf x2, Leaf x)); 
       assert (fix (TwoBranch (Even, x2, Leaf x, Leaf nx)) =
@@ -501,10 +501,10 @@ module BinaryHeap (Elt : COMPARABLE) : (PRIOQUEUE with type elt = Elt.t) =
               TwoBranch (Even, x, Leaf x, Leaf x))
 
     let test_fix_four () =
-      let x = C.generate () in
-      let x2 = C.generate_gt x in
-      let x3 = C.generate_gt x2 in
-      let x4 = C.generate_gt x3 in
+      let x = Elt.generate () in
+      let x2 = Elt.generate_gt x in
+      let x3 = Elt.generate_gt x2 in
+      let x4 = Elt.generate_gt x3 in
       assert (fix (TwoBranch (Odd, x4, Leaf x3, OneBranch (x, x2))) =
               TwoBranch (Odd, x, Leaf x3, OneBranch (x2, x4)))
 
