@@ -384,7 +384,7 @@ module BinaryHeap (Elt : COMPARABLE) : (PRIOQUEUE with type elt = Elt.t) =
       match t with
       | Leaf element
       | OneBranch (element, _)
-      | TwoBranch (_, element, _, _) -> elememt
+      | TwoBranch (_, element, _, _) -> element
 
     (*..................................................................
     fix t -- Fixes trees whose top node is greater than its
