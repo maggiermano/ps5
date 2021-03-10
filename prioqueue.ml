@@ -83,7 +83,7 @@ module ListQueue (Elt : COMPARABLE)
     let is_empty (q : queue) : bool =
       q = []
 
-    let add (e : elt) (q : queue) : queue =
+    let rec add (e : elt) (q : queue) : queue =
       match q with 
       | [] -> [e]
       | head :: tail -> if Elt.compare e head = Less then e :: q 
