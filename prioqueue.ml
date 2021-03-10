@@ -532,40 +532,13 @@ module BinaryHeap (Elt : COMPARABLE) : (PRIOQUEUE with type elt = Elt.t) =
       assert (get_last (extract_tree t) = (k, Tree (TwoBranch(Odd, x, TwoBranch (Even,y,Leaf w, Leaf n), OneBranch (z,m))))) ;
       ()
 
-     let test_take () = 
-      let y1 = Elt.generate () in
-      let y2 = Elt.generate_lt y1 in
-      let y3 = Elt.generate_lt y2 in
-      let y4 = Elt.generate_lt y3 in
-      let y5 = Elt.generate_lt y4 in
-      let y6 = Elt.generate_lt y5 in
-      let y7 = Elt.generate_lt y6 in
-      let y8 = Elt.generate_lt y7 in
-      let h1 = OneBranch (y5, y1) in
-      let h2 = TwoBranch (Odd, y7, h1, Leaf y4) in
-      let h3 = TwoBranch (Even, y6, Leaf y3, Leaf y2) in
-      let h = TwoBranch (Odd, y8, h2, h3) in
-      let element, q = take (Tree h) in
-      assert (ele = y8) ;
-      assert (is_fixed (extract_tree q)) ;
-      assert (is_even (extract_tree q)) ;
-      assert (size (extract_tree q) = 7) ;
-      let element, q1 = take q in
-      assert (ele = y7) ;
-      assert (is_fixed (extract_tree q1)) ;
-      assert (not (is_even (extract_tree q1))) ;
-      assert (size (extract_tree q1) = 6) ;
-      let element, q2 = take q1 in
-      assert (ele = y6) ;
-      assert (is_fixed (extract_tree q2)) ;
-      assert (is_even (extract_tree q2)) ;
-      assert (size (extract_tree q2) = 5) ;
-      let element, q3 = take q2 in
-      assert (ele = y5) ;
-      assert (is_fixed (extract_tree q3)) ;
-      assert (not (is_even (extract_tree q3))) ;
-      assert (size (extract_tree q3) = 4) ;
-      ()
+     let test_take () =
+      let x = Elt.generate () in
+      let x2 = Elt.generate_gt x in
+      let x3 = Elt.generate_gt x2 in
+      let x4 = Elt.generate_gt x3 in
+      assert (take (Tree (TwoBranch (Odd, x, OneBranch (x2, x4), Leaf x3))) =
+              (x, Tree (TwoBranch (Even, x2, (Leaf x4), (Leaf x3)))))
 
      let run_tests () =
       test_fix_one () ; 
