@@ -201,11 +201,11 @@ module TreeQueue (Elt : COMPARABLE) : (PRIOQUEUE with type elt = Elt.t) =
 
     let test_empty () =
       assert (empty = T.empty);
-      assert (empty <> T.insert (C.generate ()) T.empty)
+      assert (empty <> T.insert (Elt.generate ()) T.empty)
 
     let test_is_empty () =
       assert (is_empty T.empty);
-      assert (not (is_empty (T.insert (C.generate ()) T.empty)))
+      assert (not (is_empty (T.insert (Elt.generate ()) T.empty)))
 
     let test_add () =
       let a = Elt.generate () in
