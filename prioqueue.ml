@@ -431,7 +431,7 @@ module BinaryHeap (Elt : COMPARABLE) : (PRIOQUEUE with type elt = Elt.t) =
     brought down into a new node at the bottom of the tree. *This* is
     the node that we want you to return.
     ..................................................................*)
-    let get_last (t : tree) : elt * queue =
+    let rec get_last (t : tree) : elt * queue =
       match t with
        | Leaf value -> value, Empty
        | OneBranch (value1, value2) -> value2, Tree (Leaf value1)
