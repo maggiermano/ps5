@@ -193,7 +193,7 @@ module TreeQueue (Elt : COMPARABLE) : (PRIOQUEUE with type elt = Elt.t) =
        q = empty
  
     let add: elt -> queue -> queue = 
-       T.insert e q
+       T.insert
  
     let take (q : queue) : elt * queue =
        let minimum = T.getmin q in
